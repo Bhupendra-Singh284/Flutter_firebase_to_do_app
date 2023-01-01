@@ -4,14 +4,14 @@ import 'package:flutter_to_do_app/firebase_services/user_authentication.dart';
 import 'package:flutter_to_do_app/user_login_screens/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final AuthenticateUsers appAuth;
+  const LoginScreen(this.appAuth, {super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final AuthenticateUsers _app_auth = AuthenticateUsers();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
@@ -31,6 +31,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     //return homepage in a scaffold widget
+    void pushHomeScreen() {
+      widget.appAuth.pushHomePage(context);
+    }
 
     return Scaffold(
         appBar: AppBar(
@@ -175,12 +178,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Color.fromARGB(255, 10, 49, 92)),
                               backgroundColor: const MaterialStatePropertyAll(
                                   Color.fromARGB(255, 17, 72, 116))),
-                          onPressed: () {
+                          onPressed: () async {
                             if (_formkey.currentState!.validate()) {
-                              print("Valid form");
-                              _app_auth.createUser(
-                                  emailController.text.toString(),
-                                  passwordController.text.toString());
+                              await widget.appAuth.signInUser(
+                                emailController.text.toString(),
+                                passwordController.text.toString(),
+                              );
+                              if (widget.appAuth.isUseravailable()) {
+                                pushHomeScreen();
+                              }
                             }
                           },
                           child: const Text(
@@ -205,7 +211,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (_) => const SignupScreen()));
+                                      builder: (_) =>
+                                          SignupScreen(widget.appAuth)));
                             },
                             style: const ButtonStyle(
                               // Defer to the widget's default.
