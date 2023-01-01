@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_to_do_app/firebase_services/user_authentication.dart';
 import 'package:flutter_to_do_app/user_login_screens/signup_screen.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
-  final AuthenticateUsers appAuth;
-  const LoginScreen(this.appAuth, {super.key});
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -31,9 +31,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     //return homepage in a scaffold widget
-    void pushHomeScreen() {
-      widget.appAuth.pushHomePage(context);
-    }
 
     return Scaffold(
         appBar: AppBar(
@@ -180,12 +177,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Color.fromARGB(255, 17, 72, 116))),
                           onPressed: () async {
                             if (_formkey.currentState!.validate()) {
-                              await widget.appAuth.signInUser(
+                              final authProvider =
+                                  Provider.of<AuthenticateUsers>(context,
+                                      listen: false);
+                              await authProvider.signInUser(
                                 emailController.text.toString(),
                                 passwordController.text.toString(),
                               );
-                              if (widget.appAuth.isUseravailable()) {
-                                pushHomeScreen();
+                              if (authProvider.isUseravailable()) {
+                                authProvider.pushHomePage(context);
                               }
                             }
                           },
@@ -211,8 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (_) =>
-                                          SignupScreen(widget.appAuth)));
+                                      builder: (_) => const SignupScreen()));
                             },
                             style: const ButtonStyle(
                               // Defer to the widget's default.

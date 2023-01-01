@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_to_do_app/firebase_services/user_authentication.dart';
+import 'package:provider/provider.dart';
 
 class SignupScreen extends StatefulWidget {
-  final AuthenticateUsers authUser;
-  const SignupScreen(this.authUser, {super.key});
+  const SignupScreen({super.key});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -29,10 +29,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    void pushHomePage() {
-      widget.authUser.pushHomePage(context);
-    }
-
     //return homepage in a scaffold widget
     return Scaffold(
         appBar: AppBar(
@@ -164,13 +160,16 @@ class _SignupScreenState extends State<SignupScreen> {
                                   Color.fromARGB(255, 17, 72, 116))),
                           onPressed: () async {
                             if (_formkey.currentState!.validate()) {
+                              final authProvider =
+                                  Provider.of<AuthenticateUsers>(context,
+                                      listen: false);
                               print("Valid form");
-                              await widget.authUser.createUser(
+                              await authProvider.createUser(
                                   emailController.text.toString(),
                                   passwordController.text.toString());
 
-                              if (widget.authUser.isUseravailable()) {
-                                pushHomePage();
+                              if (authProvider.isUseravailable()) {
+                                authProvider.pushHomePage(context);
                               }
                             }
                           },

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_to_do_app/App_pages.dart/Homepage.dart';
 
-class AuthenticateUsers {
+class AuthenticateUsers with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? _user;
 
@@ -24,12 +24,14 @@ class AuthenticateUsers {
           email: email, password: password);
       _user = credential.user;
       if (_user != null) {
+        notifyListeners();
         return _user;
       } else {
         return null;
       }
     } catch (e) {
       _user = null;
+      notifyListeners();
       print(e);
     }
   }
@@ -40,6 +42,7 @@ class AuthenticateUsers {
           email: email, password: password);
       _user = credential.user;
       if (_user != null) {
+        notifyListeners();
         return _user;
       } else {
         _user = null;
@@ -47,6 +50,7 @@ class AuthenticateUsers {
       }
     } catch (e) {
       _user = null;
+      notifyListeners();
       print(e);
     }
   }
