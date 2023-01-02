@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter_to_do_app/firebase_services/user_authentication.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_to_do_app/reusable_widgets/form_elements.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -48,116 +48,24 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      "Create Account",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 45),
-                    ),
-                    const Padding(padding: EdgeInsets.all(10)),
-                    const Text(
-                      "please enter your sign up details.",
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 240, 235, 235),
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold),
-                    ),
+                    const Padding(padding: EdgeInsets.only(top: 30)),
+                    Formelements.createCustomText(
+                        "Create account", 45, Colors.white, false),
+                    const Padding(padding: EdgeInsets.all(7)),
+                    Formelements.createText(
+                        "please enter your sign up details"),
                     const Padding(padding: EdgeInsets.all(20)),
-                    TextFormField(
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "enter email";
-                          }
-                          if (EmailValidator.validate(value) == false) {
-                            return "enter valid email";
-                          }
-                          return null;
-                        },
-                        textInputAction: TextInputAction.done,
-                        controller: emailController,
-                        onChanged: (text) {},
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          border: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
-                            ),
-                          ),
-                          floatingLabelBehavior: FloatingLabelBehavior.auto,
-                          labelText: "Email",
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: "name@gmail.com",
-                          prefixIcon: const Icon(Icons.email_rounded),
-                          suffixIcon: emailController.text.isEmpty
-                              ? const Text("")
-                              : IconButton(
-                                  color: Colors.blue,
-                                  onPressed: () {
-                                    emailController.clear();
-                                  },
-                                  icon: const Icon(Icons.clear)),
-                        )),
+                    Formelements.createEmailfield(
+                        emailController, passwordController),
                     const Padding(padding: EdgeInsets.only(bottom: 30)),
-                    TextFormField(
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "enter password";
-                        }
-                        if (value.length < 8) {
-                          return "password should be 8 characters long";
-                        }
-
-                        return null;
-                      },
-                      controller: passwordController,
-                      obscureText: !isVisible,
-                      maxLength: 8,
-                      decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
-                            )),
-                        counterText: "",
-                        filled: true,
-                        fillColor: Colors.white,
-                        suffixIcon: passwordController.text.isEmpty
-                            ? Container(
-                                width: 0,
-                              )
-                            : IconButton(
-                                onPressed: () {
-                                  isVisible = !isVisible;
-                                  setState(() {});
-                                },
-                                icon: isVisible
-                                    ? const Icon(Icons.visibility)
-                                    : const Icon(Icons.visibility_off)),
-                        prefixIcon: const Icon(Icons.key),
-                        labelText: "Password",
-                        hintText: "Enter password",
-                      ),
-                      onChanged: (text) {},
-                    ),
+                    Formelements.createPasswordfield(
+                        emailController, passwordController, context),
                     const Padding(padding: EdgeInsets.all(20)),
                     SizedBox(
                       height: 50,
                       width: 335,
                       child: TextButton(
-                          style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(20.0))),
-                              overlayColor: const MaterialStatePropertyAll(
-                                  Color.fromARGB(255, 10, 49, 92)),
-                              backgroundColor: const MaterialStatePropertyAll(
-                                  Color.fromARGB(255, 17, 72, 116))),
+                          style: Formelements.userLoginorSignupbuttonStyle(),
                           onPressed: () async {
                             if (_formkey.currentState!.validate()) {
                               final authProvider =
@@ -182,14 +90,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          textAlign: TextAlign.start,
-                          "Already have an account?",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 230, 226, 226),
-                              fontSize: 17),
-                        ),
+                        Formelements.createText("Already have an account?"),
                         TextButton(
                             onPressed: () {
                               Navigator.pop(context);
@@ -201,14 +102,8 @@ class _SignupScreenState extends State<SignupScreen> {
                               foregroundColor: MaterialStatePropertyAll(
                                   Color.fromARGB(255, 255, 255, 255)),
                             ),
-                            child: const Text(
-                              textAlign: TextAlign.center,
-                              ",Login",
-                              style: TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold),
-                            ))
+                            child: Formelements.createCustomText(
+                                ",Login", 22, Colors.white, true))
                       ],
                     )
                   ],

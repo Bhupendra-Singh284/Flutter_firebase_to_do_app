@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_to_do_app/reusable_widgets/password_visibility.dart';
 import 'package:flutter_to_do_app/user_login_screens/loginScreen.dart';
 import 'package:flutter_to_do_app/firebase_services/user_authentication.dart';
 import 'package:provider/provider.dart';
@@ -21,15 +22,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AuthenticateUsers(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthenticateUsers()),
+        ChangeNotifierProvider(create: (context) => PasswordVisibility())
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: LoginScreen(),
+        home: const LoginScreen(),
       ),
     );
   }
