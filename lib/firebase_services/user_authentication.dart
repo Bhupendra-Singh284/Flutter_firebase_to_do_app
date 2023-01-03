@@ -24,6 +24,7 @@ class AuthenticateUsers with ChangeNotifier {
           email: email, password: password);
       _user = credential.user;
       if (_user != null) {
+        print("user created");
         notifyListeners();
         return _user;
       } else {

@@ -80,9 +80,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               emailController.text.toString(),
                               passwordController.text.toString(),
                             );
-                            if (authProvider.isUseravailable()) {
-                              authProvider.pushHomePage(context);
-                            }
                           }
                         },
                         child: const Text(
@@ -111,6 +108,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           child: Formelements.createCustomText(
                               ",Sign up", 22, Colors.white, true))
+                    ],
+                  ),
+                  const Padding(padding: EdgeInsets.only(bottom: 20)),
+                  TextButton(onPressed: () {}, child: const Text("")),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.book),
+                      Formelements.createCustomText(
+                          "sign in with google", 18, Colors.black, false),
                     ],
                   )
                 ],

@@ -114,8 +114,8 @@ class Formelements {
                   passwordVisibility.toggleVisibility();
                 },
                 icon: passwordVisibility.isVisible
-                    ? const Icon(Icons.visibility)
-                    : const Icon(Icons.visibility_off)),
+                    ? const Icon(Icons.visibility_off)
+                    : const Icon(Icons.visibility)),
         prefixIcon: const Icon(Icons.key),
         labelText: "Passsword",
         hintText: "Enter password",

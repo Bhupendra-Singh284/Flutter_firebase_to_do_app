@@ -29,6 +29,10 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    popNavigator() {
+      Navigator.pop(context);
+    }
+
     //return homepage in a scaffold widget
     return Scaffold(
         appBar: AppBar(
@@ -75,9 +79,8 @@ class _SignupScreenState extends State<SignupScreen> {
                               await authProvider.createUser(
                                   emailController.text.toString(),
                                   passwordController.text.toString());
-
                               if (authProvider.isUseravailable()) {
-                                authProvider.pushHomePage(context);
+                                popNavigator();
                               }
                             }
                           },
