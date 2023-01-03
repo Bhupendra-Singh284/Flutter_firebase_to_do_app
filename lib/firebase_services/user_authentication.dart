@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_to_do_app/App_pages/Homepage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AuthenticateUsers with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -30,6 +31,13 @@ class AuthenticateUsers with ChangeNotifier {
       } else {
         return null;
       }
+    } on FirebaseException catch (e) {
+      Fluttertoast.showToast(
+        msg: e.message.toString(),
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.white,
+        textColor: Colors.black,
+      );
     } catch (e) {
       _user = null;
       notifyListeners();
@@ -37,7 +45,7 @@ class AuthenticateUsers with ChangeNotifier {
     }
   }
 
-  Future signInUser(String email, String password) async {
+  Future signInUser(String email, String password, BuildContext context) async {
     try {
       UserCredential credential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -49,6 +57,13 @@ class AuthenticateUsers with ChangeNotifier {
         _user = null;
         return null;
       }
+    } on FirebaseException catch (e) {
+      Fluttertoast.showToast(
+        msg: e.message.toString(),
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.white,
+        textColor: Colors.black,
+      );
     } catch (e) {
       _user = null;
       notifyListeners();

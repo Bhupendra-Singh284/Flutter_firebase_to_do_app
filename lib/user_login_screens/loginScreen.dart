@@ -3,6 +3,7 @@ import 'package:flutter_to_do_app/firebase_services/user_authentication.dart';
 import 'package:flutter_to_do_app/reusable_widgets/form_elements.dart';
 import 'package:flutter_to_do_app/user_login_screens/signup_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -77,9 +78,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 context,
                                 listen: false);
                             await authProvider.signInUser(
-                              emailController.text.toString(),
-                              passwordController.text.toString(),
-                            );
+                                emailController.text.toString(),
+                                passwordController.text.toString(),
+                                context);
                           }
                         },
                         child: const Text(
@@ -87,7 +88,25 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: TextStyle(color: Colors.white, fontSize: 24),
                         )),
                   ),
-                  const Padding(padding: EdgeInsets.only(bottom: 12)),
+                  const Padding(padding: EdgeInsets.only(bottom: 15)),
+                  Formelements.createCustomText("OR", 18, Colors.white, false),
+                  const Padding(padding: EdgeInsets.only(bottom: 15)),
+                  SizedBox(
+                    height: 50,
+                    width: 335,
+                    child: TextButton.icon(
+                      icon: const FaIcon(
+                        FontAwesomeIcons.google,
+                      ),
+                      onPressed: () {},
+                      style: Formelements.userLoginorSignupbuttonStyle(),
+                      label: const Text(
+                        "Sign in with google",
+                        style: TextStyle(color: Colors.white, fontSize: 19),
+                      ),
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.only(bottom: 110)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -107,19 +126,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Color.fromARGB(255, 255, 255, 255)),
                           ),
                           child: Formelements.createCustomText(
-                              ",Sign up", 22, Colors.white, true))
+                              ",Sign up", 24, Colors.white, true))
                     ],
                   ),
-                  const Padding(padding: EdgeInsets.only(bottom: 20)),
-                  TextButton(onPressed: () {}, child: const Text("")),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.book),
-                      Formelements.createCustomText(
-                          "sign in with google", 18, Colors.black, false),
-                    ],
-                  )
                 ],
               ),
             ),

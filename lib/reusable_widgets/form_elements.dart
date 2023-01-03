@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_to_do_app/reusable_widgets/password_visibility.dart';
@@ -45,6 +46,7 @@ class Formelements {
           if (EmailValidator.validate(value) == false) {
             return "enter valid email";
           }
+
           return null;
         },
         textInputAction: TextInputAction.done,
