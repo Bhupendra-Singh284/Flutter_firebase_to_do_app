@@ -1,18 +1,18 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_to_do_app/reusable_widgets/password_visibility.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_to_do_app/custom_colors.dart';
 
 class Formelements {
   static ButtonStyle userLoginorSignupbuttonStyle() {
     return ButtonStyle(
         shape: MaterialStateProperty.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
-        overlayColor:
-            const MaterialStatePropertyAll(Color.fromARGB(255, 10, 49, 92)),
+        overlayColor: const MaterialStatePropertyAll(
+            CustomColors.mainButtonsOverlaycolor),
         backgroundColor:
-            const MaterialStatePropertyAll(Color.fromARGB(255, 17, 72, 116)));
+            const MaterialStatePropertyAll(CustomColors.signupOrLogincolor));
   }
 
   static Text createCustomText(
@@ -41,10 +41,10 @@ class Formelements {
     return TextFormField(
         validator: (value) {
           if (value!.isEmpty) {
-            return "enter email";
+            return "Enter email";
           }
           if (EmailValidator.validate(value) == false) {
-            return "enter valid email";
+            return "Enter valid email";
           }
 
           return null;
@@ -53,6 +53,8 @@ class Formelements {
         controller: emailController,
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
+          errorStyle:
+              const TextStyle(fontSize: 15, color: CustomColors.errorTextcolor),
           border: UnderlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide: const BorderSide(
@@ -85,10 +87,10 @@ class Formelements {
     return TextFormField(
       validator: (value) {
         if (value!.isEmpty) {
-          return "enter password";
+          return "Enter password";
         }
         if (value.length < 8) {
-          return "password should be 8 characters long";
+          return "Password should be 8 characters long";
         }
 
         return null;
@@ -97,6 +99,8 @@ class Formelements {
       obscureText: passwordVisibility.isVisible,
       maxLength: 8,
       decoration: InputDecoration(
+        errorStyle:
+            const TextStyle(fontSize: 15, color: CustomColors.errorTextcolor),
         border: UnderlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide: const BorderSide(

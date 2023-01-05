@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_to_do_app/firebase_services/user_authentication.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_to_do_app/reusable_widgets/form_elements.dart';
+import 'package:flutter_to_do_app/custom_colors.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -42,7 +43,7 @@ class _SignupScreenState extends State<SignupScreen> {
             style: TextStyle(fontSize: 30),
           ),
         ),
-        backgroundColor: Colors.lightBlue,
+        backgroundColor: CustomColors.signInScreensBackgroundColor,
         body: SingleChildScrollView(
           child: Center(
             child: Form(

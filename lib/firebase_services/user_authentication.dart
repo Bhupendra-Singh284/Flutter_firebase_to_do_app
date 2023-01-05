@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_to_do_app/App_pages/Homepage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthenticateUsers with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? _user;
+  final googleUser = GoogleSignIn();
+  User? user;
 
   void pushHomePage(BuildContext context) {
     Navigator.push(
@@ -13,7 +15,7 @@ class AuthenticateUsers with ChangeNotifier {
   }
 
   bool isUseravailable() {
-    if (_user != null) {
+    if (user != null) {
       return true;
     }
     return false;
@@ -23,11 +25,11 @@ class AuthenticateUsers with ChangeNotifier {
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      _user = credential.user;
-      if (_user != null) {
+      user = credential.user;
+      if (user != null) {
         print("user created");
         notifyListeners();
-        return _user;
+        return user;
       } else {
         return null;
       }
@@ -39,7 +41,7 @@ class AuthenticateUsers with ChangeNotifier {
         textColor: Colors.black,
       );
     } catch (e) {
-      _user = null;
+      user = null;
       notifyListeners();
       print(e);
     }
@@ -49,13 +51,11 @@ class AuthenticateUsers with ChangeNotifier {
     try {
       UserCredential credential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      _user = credential.user;
-      if (_user != null) {
+
+      user = credential.user;
+      if (user != null) {
         notifyListeners();
-        return _user;
-      } else {
-        _user = null;
-        return null;
+        return user;
       }
     } on FirebaseException catch (e) {
       Fluttertoast.showToast(
@@ -65,9 +65,54 @@ class AuthenticateUsers with ChangeNotifier {
         textColor: Colors.black,
       );
     } catch (e) {
-      _user = null;
+      user = null;
       notifyListeners();
       print(e);
     }
+  }
+
+  Future signInWithGoogle() async {
+    // Trigger the authentication flow
+    try {
+      _auth.signOut();
+      googleUser.signOut();
+      final GoogleSignInAccount? googleAccUser = await googleUser.signIn();
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth =
+          await googleAccUser?.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      // Once signed in, return the UserCredential
+      UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+
+      user = userCredential.user;
+
+      if (user != null) {
+        notifyListeners();
+      }
+    } on FirebaseException catch (e) {
+      Fluttertoast.showToast(
+          msg: e.message.toString(),
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.white,
+          textColor: Colors.black);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void signoutUser() async {
+    _auth.signOut();
+    googleUser.disconnect();
+    user = null;
+    print("function callled");
+    notifyListeners();
   }
 }
