@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_to_do_app/custom_colors.dart';
 
 class Formelements {
+  //create basic style for login and signup buttons
   static ButtonStyle userLoginorSignupbuttonStyle() {
     return ButtonStyle(
         shape: MaterialStateProperty.all(
@@ -16,6 +17,7 @@ class Formelements {
             const MaterialStatePropertyAll(CustomColors.signupOrLogincolor));
   }
 
+  //create custom text according to user needs
   static Text createCustomText(
       String text, double size, Color color, bool underline) {
     return Text(text,
@@ -27,6 +29,7 @@ class Formelements {
                 underline ? TextDecoration.underline : TextDecoration.none));
   }
 
+  //create deafault text of size 18 ,white color in bold
   static Text createText(String text) {
     return Text(
       text,
@@ -37,6 +40,7 @@ class Formelements {
     );
   }
 
+  //create email fiel for forms in login and sign up pages
   static TextFormField createEmailfield(TextEditingController emailController,
       TextEditingController passwordController) {
     return TextFormField(
@@ -80,11 +84,13 @@ class Formelements {
         ));
   }
 
+  //create password field for forms in login and signup pages
   static TextFormField createPasswordfield(
       TextEditingController emailController,
       TextEditingController passwordController,
       BuildContext context) {
-    final passwordVisibility = Provider.of<PasswordVisibility>(context);
+    final passwordVisibility = Provider.of<PasswordVisibility>(
+        context); //use an instance of the passwordVisibility class via provider
     return TextFormField(
       validator: (value) {
         if (value!.isEmpty) {
@@ -118,9 +124,11 @@ class Formelements {
             : IconButton(
                 onPressed: () {
                   print("Tapped");
-                  passwordVisibility.toggleVisibility();
+                  passwordVisibility
+                      .toggleVisibility(); //call the toggle function on tap
                 },
-                icon: passwordVisibility.isVisible
+                icon: passwordVisibility
+                        .isVisible //toggle icon according to isVisible variable from passwordVisibility class
                     ? const Icon(Icons.visibility)
                     : const Icon(Icons.visibility_off)),
         prefixIcon: const Icon(Icons.key),
@@ -130,8 +138,8 @@ class Formelements {
     );
   }
 
-  //create google sign in or log in
-  static Container createGoogleSigninOrLoginButton(
+  //create google sign in or log in button for sign up and login pages
+  static Container createGoogleSignupOrLoginButton(
       BuildContext context, bool check) {
     final authProvider = Provider.of<AuthenticateUsers>(context, listen: false);
     return Container(

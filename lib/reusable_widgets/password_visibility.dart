@@ -6,7 +6,7 @@ class PasswordVisibility with ChangeNotifier {
   void toggleVisibility() {
     isVisible = !isVisible;
     print("notified");
-    print(PasswordVisibility().hasListeners);
+    //change values in login and signup class by notifying them about the change through provider
     notifyListeners();
   }
 }

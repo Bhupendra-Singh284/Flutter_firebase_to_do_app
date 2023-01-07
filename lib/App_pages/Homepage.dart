@@ -8,7 +8,8 @@ import 'package:flutter_to_do_app/reusable_widgets/form_elements.dart';
 class Homepage extends StatelessWidget {
   Homepage({super.key});
 
-  DatabaseReference ref = FirebaseDatabase.instance.ref("post");
+  //create an instance of firebase realtime database for read and write
+  final DatabaseReference ref = FirebaseDatabase.instance.ref("post");
   final textController = TextEditingController();
 
   @override

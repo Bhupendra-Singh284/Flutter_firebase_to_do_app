@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_to_do_app/App_pages/Homepage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthenticateUsers with ChangeNotifier {
+  //create firebase auth object for authentication
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  //create a google user for google sign in
   final googleUser = GoogleSignIn();
+
+  //create a firebase user object to get details eg email, name ,image
   User? user;
 
-  void pushHomePage(BuildContext context) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => Homepage()));
-  }
-
+  //check if  we have any user present or not
   bool isUseravailable() {
     if (user != null) {
       return true;
@@ -111,42 +111,40 @@ class AuthenticateUsers with ChangeNotifier {
       UserCredential userCredential =
           await _auth.signInWithCredential(credential);
 
+      //set the user object to current user
       user = userCredential.user;
 
       if (user != null) {
-        print("user not null");
         if (check == true) {
-          print("check is true");
+          //check if it is new account from login page
           if (userCredential.additionalUserInfo!.isNewUser) {
-            print("new user");
+            //incase of new account delete the account and throw exception
             user?.delete();
             throw FirebaseAuthException(code: "No registered account found");
           } else {
             notifyListeners();
-            print("old user");
           }
         } else {
-          print("sign in new user");
+          //if google authentication called from sign up page give user entry  to his account even if the user has already made a google account
           notifyListeners();
           Navigator.pop(context);
         }
       }
     } on FirebaseException catch (e) {
+      //on exception show user the message
       Fluttertoast.showToast(
           msg: e.code.toString(),
           gravity: ToastGravity.CENTER,
           backgroundColor: Colors.white,
           textColor: Colors.black);
-    } catch (e) {
-      print(e);
     }
   }
 
+  //for signing out a user from the app
   void signoutUser() async {
     _auth.signOut();
     googleUser.disconnect();
     user = null;
-    print("function callled");
     notifyListeners();
   }
 }

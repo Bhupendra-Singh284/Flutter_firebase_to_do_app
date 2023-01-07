@@ -12,18 +12,21 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  //create email and password controller for email and password form fields
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  //generating unique key for form
   final _formkey = GlobalKey<FormState>();
 
-  bool isVisible = false;
-
-  Container createGoogleSigninButton(BuildContext context, bool check) {
-    return Formelements.createGoogleSigninOrLoginButton(context, check);
+  //create google signup button by using formelments class
+  Container createGoogleSignupButton(BuildContext context, bool check) {
+    return Formelements.createGoogleSignupOrLoginButton(context, check);
   }
 
   @override
   Widget build(BuildContext context) {
+    //changing state on email and password field changes
     emailController.addListener(() {
       setState(() {});
     });
@@ -55,22 +58,34 @@ class _SignupScreenState extends State<SignupScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Padding(padding: EdgeInsets.only(top: 30)),
+
+                    //create main heading text
                     Formelements.createCustomText(
                         "Create account", 45, Colors.white, false),
                     const Padding(padding: EdgeInsets.all(7)),
+
+                    //create sub heading text
                     Formelements.createText(
                         "please enter your sign up details"),
+
                     const Padding(padding: EdgeInsets.all(20)),
+
+                    //create email text field for user input
                     Formelements.createEmailfield(
                         emailController, passwordController),
                     const Padding(padding: EdgeInsets.only(bottom: 30)),
+
+                    //create password text field for user input
                     Formelements.createPasswordfield(
                         emailController, passwordController, context),
                     const Padding(padding: EdgeInsets.all(20)),
+
+                    //create main sign up button of the page
                     SizedBox(
                       height: 50,
                       width: 335,
                       child: TextButton(
+                          //use previously build button style from form elements class
                           style: Formelements.userLoginorSignupbuttonStyle(),
                           onPressed: () async {
                             if (_formkey.currentState!.validate()) {
@@ -94,9 +109,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     const Padding(padding: EdgeInsets.only(bottom: 15)),
                     Formelements.createCustomText(
                         "OR", 18, Colors.white, false),
+
+                    //create google signup button
                     const Padding(padding: EdgeInsets.only(bottom: 15)),
-                    createGoogleSigninButton(context, false),
+                    createGoogleSignupButton(context, false),
                     const Padding(padding: EdgeInsets.only(bottom: 12)),
+
+                    //create enling text and button
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -106,7 +125,6 @@ class _SignupScreenState extends State<SignupScreen> {
                               Navigator.pop(context);
                             },
                             style: const ButtonStyle(
-                              // Defer to the widget's default.
                               overlayColor: MaterialStatePropertyAll(
                                   Color.fromARGB(255, 21, 109, 181)),
                               foregroundColor: MaterialStatePropertyAll(
