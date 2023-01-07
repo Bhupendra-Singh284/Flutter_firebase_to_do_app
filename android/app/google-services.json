@@ -1,9 +1,12 @@
 {
   "project_info": {
     "project_number": "743690833205",
+    "firebase_url": "https://flutter-to-do-app-26b84-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "flutter-to-do-app-26b84",
     "storage_bucket": "flutter-to-do-app-26b84.appspot.com"
   },
+  
+  
   "client": [
     {
       "client_info": {
@@ -13,6 +16,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "743690833205-jcvou0ke2oq2cbce85javonashcq6dvv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_to_do_app",
+            "certificate_hash": "c422ddcbe33774600ab16e6b289e776ea7914ff8"
+          }
+        },
         {
           "client_id": "743690833205-va5etoka3d9kp2hf8mbodtcp5d11arru.apps.googleusercontent.com",
           "client_type": 3

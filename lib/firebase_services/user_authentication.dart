@@ -11,7 +11,7 @@ class AuthenticateUsers with ChangeNotifier {
 
   void pushHomePage(BuildContext context) {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const Homepage()));
+        context, MaterialPageRoute(builder: (context) => Homepage()));
   }
 
   bool isUseravailable() {
@@ -21,10 +21,18 @@ class AuthenticateUsers with ChangeNotifier {
     return false;
   }
 
+//Create New User with Email and Password
   Future createUser(String email, String password) async {
     try {
+      final userCredential =
+          EmailAuthProvider.credential(email: email, password: password);
+
+      final linkUserCredential = await FirebaseAuth.instance.currentUser
+          ?.linkWithCredential(userCredential);
+
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+
       user = credential.user;
       if (user != null) {
         print("user created");
@@ -47,8 +55,12 @@ class AuthenticateUsers with ChangeNotifier {
     }
   }
 
+//Email and Password Login
   Future signInUser(String email, String password, BuildContext context) async {
     try {
+      await _auth.signOut();
+      await googleUser.signOut();
+
       UserCredential credential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
 
@@ -71,35 +83,57 @@ class AuthenticateUsers with ChangeNotifier {
     }
   }
 
-  Future signInWithGoogle() async {
+//Google Sign in
+  Future signInWithGoogle(bool check, BuildContext context) async {
     // Trigger the authentication flow
     try {
-      _auth.signOut();
       googleUser.signOut();
+      _auth.signOut();
+
       final GoogleSignInAccount? googleAccUser = await googleUser.signIn();
 
+      if (googleAccUser == null) {
+        print("nothing selected");
+        return;
+      }
       // Obtain the auth details from the request
-      final GoogleSignInAuthentication? googleAuth =
-          await googleAccUser?.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleAccUser.authentication;
 
       // Create a new credential
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
       );
 
       // Once signed in, return the UserCredential
+
       UserCredential userCredential =
           await _auth.signInWithCredential(credential);
 
       user = userCredential.user;
 
       if (user != null) {
-        notifyListeners();
+        print("user not null");
+        if (check == true) {
+          print("check is true");
+          if (userCredential.additionalUserInfo!.isNewUser) {
+            print("new user");
+            user?.delete();
+            throw FirebaseAuthException(code: "No registered account found");
+          } else {
+            notifyListeners();
+            print("old user");
+          }
+        } else {
+          print("sign in new user");
+          notifyListeners();
+          Navigator.pop(context);
+        }
       }
     } on FirebaseException catch (e) {
       Fluttertoast.showToast(
-          msg: e.message.toString(),
+          msg: e.code.toString(),
           gravity: ToastGravity.CENTER,
           backgroundColor: Colors.white,
           textColor: Colors.black);

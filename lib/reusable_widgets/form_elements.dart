@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter_to_do_app/firebase_services/user_authentication.dart';
 import 'package:flutter_to_do_app/reusable_widgets/password_visibility.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_to_do_app/custom_colors.dart';
@@ -96,7 +97,7 @@ class Formelements {
         return null;
       },
       controller: passwordController,
-      obscureText: passwordVisibility.isVisible,
+      obscureText: !passwordVisibility.isVisible,
       maxLength: 8,
       decoration: InputDecoration(
         errorStyle:
@@ -120,12 +121,38 @@ class Formelements {
                   passwordVisibility.toggleVisibility();
                 },
                 icon: passwordVisibility.isVisible
-                    ? const Icon(Icons.visibility_off)
-                    : const Icon(Icons.visibility)),
+                    ? const Icon(Icons.visibility)
+                    : const Icon(Icons.visibility_off)),
         prefixIcon: const Icon(Icons.key),
         labelText: "Passsword",
         hintText: "Enter password",
       ),
     );
+  }
+
+  //create google sign in or log in
+  static Container createGoogleSigninOrLoginButton(
+      BuildContext context, bool check) {
+    final authProvider = Provider.of<AuthenticateUsers>(context, listen: false);
+    return Container(
+        padding: const EdgeInsets.all(2),
+        height: 50,
+        width: 335,
+        decoration: const BoxDecoration(
+            color: Color.fromARGB(255, 255, 255, 255),
+            borderRadius: BorderRadius.all(Radius.circular(22))),
+        child: TextButton(
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            const Image(image: AssetImage("assets/images/google_logo.png")),
+            Formelements.createCustomText(
+                check ? " Sign in with google" : "Sign up with google",
+                18,
+                Colors.black,
+                false)
+          ]),
+          onPressed: () async {
+            await authProvider.signInWithGoogle(check, context);
+          },
+        ));
   }
 }

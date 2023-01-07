@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -33,9 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: authProvider.isUseravailable()
-          ? const Homepage()
-          : const LoginScreen(),
+      home: authProvider.isUseravailable() ? Homepage() : const LoginScreen(),
     );
   }
 }

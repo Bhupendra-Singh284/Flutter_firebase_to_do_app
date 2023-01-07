@@ -19,6 +19,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool isVisible = false;
 
+  Container createGoogleLoginButton(BuildContext context, bool check) {
+    return Formelements.createGoogleSigninOrLoginButton(context, check);
+  }
+
   @override
   Widget build(BuildContext context) {
     //return homepage in a scaffold widget
@@ -87,30 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Padding(padding: EdgeInsets.only(bottom: 15)),
                   Formelements.createCustomText("OR", 18, Colors.white, false),
                   const Padding(padding: EdgeInsets.only(bottom: 15)),
-                  Container(
-                      padding: const EdgeInsets.all(2),
-                      height: 50,
-                      width: 335,
-                      decoration: const BoxDecoration(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          borderRadius: BorderRadius.all(Radius.circular(22))),
-                      child: TextButton(
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Image(
-                                  image: AssetImage(
-                                      "assets/images/google_logo.png")),
-                              Formelements.createCustomText(
-                                  " Sign up with google",
-                                  18,
-                                  Colors.black,
-                                  false)
-                            ]),
-                        onPressed: () async {
-                          await authProvider.signInWithGoogle();
-                        },
-                      )),
+                  createGoogleLoginButton(context, true),
                   const Padding(padding: EdgeInsets.only(bottom: 110)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

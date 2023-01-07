@@ -18,18 +18,19 @@ class _SignupScreenState extends State<SignupScreen> {
 
   bool isVisible = false;
 
+  Container createGoogleSigninButton(BuildContext context, bool check) {
+    return Formelements.createGoogleSigninOrLoginButton(context, check);
+  }
+
   @override
-  void initState() {
+  Widget build(BuildContext context) {
     emailController.addListener(() {
       setState(() {});
     });
     passwordController.addListener(() {
       setState(() {});
     });
-  }
 
-  @override
-  Widget build(BuildContext context) {
     popNavigator() {
       Navigator.pop(context);
     }
@@ -90,6 +91,11 @@ class _SignupScreenState extends State<SignupScreen> {
                             style: TextStyle(color: Colors.white, fontSize: 24),
                           )),
                     ),
+                    const Padding(padding: EdgeInsets.only(bottom: 15)),
+                    Formelements.createCustomText(
+                        "OR", 18, Colors.white, false),
+                    const Padding(padding: EdgeInsets.only(bottom: 15)),
+                    createGoogleSigninButton(context, false),
                     const Padding(padding: EdgeInsets.only(bottom: 12)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
