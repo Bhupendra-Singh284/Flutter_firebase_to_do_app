@@ -1,5 +1,3 @@
 {
-    "editor.tokenColorCustomizations": {
-             "comments": "#c9d214fc"   },
     "editor.fontLigatures": false
 }

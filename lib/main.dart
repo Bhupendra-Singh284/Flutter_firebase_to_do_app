@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -7,10 +6,15 @@ import 'package:flutter_to_do_app/reusable_widgets/password_visibility.dart';
 import 'package:flutter_to_do_app/user_login_screens/loginScreen.dart';
 import 'package:flutter_to_do_app/firebase_services/user_authentication.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   //ensure all resources have been loaded
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  //remove the top bar in mobile
+  SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
 
   //keep splash screen active until the below resources is not fully loaded
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);

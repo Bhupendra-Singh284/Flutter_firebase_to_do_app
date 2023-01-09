@@ -7,4 +7,6 @@ class CustomColors {
   static const Color themeColor = Color.fromARGB(255, 33, 150, 243);
   static const Color signInScreensBackgroundColor =
       Color.fromARGB(255, 3, 169, 244);
+  static const Color homescreenBackgroundColor =
+      Color.fromARGB(255, 236, 234, 234);
 }
