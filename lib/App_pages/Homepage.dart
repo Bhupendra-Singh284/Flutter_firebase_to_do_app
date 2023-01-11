@@ -21,7 +21,7 @@ class _HomepageState extends State<Homepage> {
       FirebaseAuth.instance.currentUser?.providerData[0].email.toString() ?? "";
   int selectedIndex = 0;
 
-  final screens = [const ToDoPage(), const CompletedTasks()];
+  final screens = [ToDoPage(), const CompletedTasks()];
 
   @override
   Widget build(BuildContext context) {

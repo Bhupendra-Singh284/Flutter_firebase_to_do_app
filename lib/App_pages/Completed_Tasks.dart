@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_to_do_app/App_pages/App_pages_reusable_widgets.dart';
 
 class CompletedTasks extends StatelessWidget {
   const CompletedTasks({super.key});
@@ -11,25 +12,7 @@ class CompletedTasks extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Padding(padding: EdgeInsets.only(bottom: 60)),
-          TextField(
-            decoration: InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                hintStyle: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 142, 139, 139)),
-                prefixIcon: const Icon(Icons.search),
-                hintText: "Search tasks",
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    borderSide: BorderSide(
-                        width: 1, color: Colors.grey.withOpacity(0.5))),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        width: 1, color: Colors.grey.withOpacity(0.5)),
-                    borderRadius: BorderRadius.circular(25))),
-          ),
+          AppPageElements.createSearchbar(),
           const Padding(padding: EdgeInsets.only(bottom: 30)),
           const Text(
             "Completed Tasks",
