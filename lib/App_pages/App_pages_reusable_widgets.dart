@@ -3,26 +3,28 @@ import 'package:flutter/material.dart';
 class AppPageElements {
   static Container createSearchbar() {
     return Container(
-      width: 329,
+      width: 331,
       alignment: Alignment.center,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(55),
           boxShadow: const [
             BoxShadow(
                 offset: Offset(0, 2),
-                color: Color.fromARGB(255, 182, 180, 180),
-                blurRadius: 3.5)
+                color: Color.fromARGB(255, 205, 202, 202),
+                blurRadius: 1,
+                spreadRadius: 0.1)
           ]),
       child: SizedBox(
-        width: 327,
+        width: 330,
         child: TextField(
           style: const TextStyle(fontSize: 18),
           decoration: InputDecoration(
               fillColor: Colors.white,
               filled: true,
               hintStyle: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Lato',
+                  fontSize: 17,
+                  fontWeight: FontWeight.w400,
                   color: Color.fromARGB(255, 142, 139, 139)),
               prefixIcon: const Icon(Icons.search),
               hintText: "Search tasks",

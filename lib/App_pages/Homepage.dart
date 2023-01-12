@@ -30,6 +30,8 @@ class _HomepageState extends State<Homepage> {
 
     return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            elevation: 20,
             backgroundColor: CustomColors.themeColor,
             unselectedItemColor: Colors.white.withOpacity(0.7),
             selectedItemColor: Colors.white,
@@ -68,7 +70,11 @@ class _HomepageState extends State<Homepage> {
             automaticallyImplyLeading: false,
             title: const Text(
               "To Do App",
-              style: TextStyle(fontSize: 27, color: Colors.white),
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 27,
+                  color: Colors.white,
+                  fontFamily: 'Lato'),
             )),
         body: screens[selectedIndex]);
   }
