@@ -24,11 +24,10 @@ class AuthenticateUsers with ChangeNotifier {
 //Create New User with Email and Password
   Future createUser(String email, String password) async {
     try {
+      _auth.signOut();
+      googleUser.signOut();
       final userCredential =
           EmailAuthProvider.credential(email: email, password: password);
-
-      final linkUserCredential = await FirebaseAuth.instance.currentUser
-          ?.linkWithCredential(userCredential);
 
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
