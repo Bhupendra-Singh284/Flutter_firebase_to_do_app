@@ -21,7 +21,130 @@ class _HomepageState extends State<Homepage> {
       FirebaseAuth.instance.currentUser?.providerData[0].email.toString() ?? "";
   int selectedIndex = 0;
 
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final _formkey = GlobalKey<FormState>();
+
   final screens = [ToDoPage(), const CompletedTasks()];
+
+  AlertDialog addNewTask() {
+    titleController.clear();
+    descriptionController.clear();
+    return AlertDialog(
+      title: const Text(
+        "Add new task",
+        style: TextStyle(
+            fontFamily: 'Lato', fontWeight: FontWeight.w500, fontSize: 28),
+      ),
+      contentPadding: const EdgeInsets.all(20),
+      actions: [
+        Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+          SizedBox(
+            height: 40,
+            child: ElevatedButton(
+                style:
+                    const ButtonStyle(elevation: MaterialStatePropertyAll(2)),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  "Cancel",
+                  style: TextStyle(
+                      fontSize: 18, color: Colors.white, fontFamily: 'Lato'),
+                )),
+          ),
+          const Padding(padding: EdgeInsets.only(right: 15)),
+          SizedBox(
+            height: 40,
+            child: ElevatedButton(
+                style:
+                    const ButtonStyle(elevation: MaterialStatePropertyAll(2)),
+                onPressed: () {
+                  if (_formkey.currentState!.validate()) {
+                    print("correct input");
+                  }
+                },
+                child: const Text(
+                  "Add",
+                  style: TextStyle(
+                      fontSize: 18, color: Colors.white, fontFamily: 'Lato'),
+                )),
+          ),
+          const Padding(padding: EdgeInsets.only(right: 10)),
+        ])
+      ],
+      content: SizedBox(
+        width: 150,
+        child: Form(
+          key: _formkey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(padding: EdgeInsets.only(bottom: 10)),
+              const Text(
+                "Title",
+                style: TextStyle(
+                    fontSize: 19,
+                    fontFamily: 'Lato',
+                    fontWeight: FontWeight.w200),
+              ),
+              const Padding(padding: EdgeInsets.only(bottom: 20)),
+              TextFormField(
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Enter a title";
+                  }
+                  if (value.length > 60) {
+                    return "Title should be between 0 to 60 letters";
+                  }
+                  return null;
+                },
+                controller: titleController,
+                minLines: 1,
+                maxLines: 1,
+                style: const TextStyle(fontSize: 18, height: 1.5),
+                decoration: const InputDecoration(
+                    errorStyle: TextStyle(fontSize: 14),
+                    isDense: true,
+                    counterText: "",
+                    contentPadding: EdgeInsets.only(bottom: 10)),
+              ),
+              const Padding(padding: EdgeInsets.only(bottom: 16)),
+              const Text(
+                "Description",
+                style: TextStyle(
+                    fontSize: 19,
+                    fontFamily: 'Lato',
+                    fontWeight: FontWeight.w500),
+              ),
+              const Padding(padding: EdgeInsets.only(bottom: 20)),
+              TextFormField(
+                controller: descriptionController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Enter description";
+                  }
+                  if (value.length > 150) {
+                    return "Description should be between 0 to 150 letters";
+                  }
+                  return null;
+                },
+                minLines: 1,
+                maxLines: 3,
+                style: const TextStyle(fontSize: 18, height: 1.5),
+                decoration: const InputDecoration(
+                    errorStyle: TextStyle(fontSize: 14),
+                    counterText: "",
+                    isDense: true,
+                    contentPadding: EdgeInsets.only(bottom: 10)),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   Container createBottomNavigationBar() {
     return Container(
@@ -101,71 +224,4 @@ class _HomepageState extends State<Homepage> {
             )),
         body: screens[selectedIndex]);
   }
-}
-
-AlertDialog addNewTask() {
-  return AlertDialog(
-    title: const Text(
-      "Add new task",
-      style: TextStyle(
-          fontFamily: 'Lato', fontWeight: FontWeight.w500, fontSize: 28),
-    ),
-    contentPadding: const EdgeInsets.all(20),
-    actions: [
-      SizedBox(
-        height: 40,
-        child: ElevatedButton(
-            style: const ButtonStyle(elevation: MaterialStatePropertyAll(3)),
-            onPressed: () {},
-            child: const Text(
-              "Add",
-              style: TextStyle(
-                  fontSize: 18, color: Colors.white, fontFamily: 'Lato'),
-            )),
-      )
-    ],
-    content: SizedBox(
-      width: 150,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Padding(padding: EdgeInsets.only(bottom: 10)),
-          Text(
-            "Title",
-            style: TextStyle(
-                fontSize: 19, fontFamily: 'Lato', fontWeight: FontWeight.w200),
-          ),
-          Padding(padding: EdgeInsets.only(bottom: 20)),
-          TextField(
-            maxLines: 3,
-            maxLength: 60,
-            minLines: 1,
-            style: TextStyle(fontSize: 18, height: 1.5),
-            decoration: InputDecoration(
-                counterText: "",
-                isDense: true,
-                contentPadding: EdgeInsets.only(bottom: 10)),
-          ),
-          Padding(padding: EdgeInsets.only(bottom: 16)),
-          Text(
-            "Description",
-            style: TextStyle(
-                fontSize: 19, fontFamily: 'Lato', fontWeight: FontWeight.w500),
-          ),
-          Padding(padding: EdgeInsets.only(bottom: 20)),
-          TextField(
-            maxLength: 200,
-            minLines: 1,
-            maxLines: 10,
-            style: TextStyle(fontSize: 18, height: 1.5),
-            decoration: InputDecoration(
-                counterText: "",
-                isDense: true,
-                contentPadding: EdgeInsets.only(bottom: 10)),
-          )
-        ],
-      ),
-    ),
-  );
 }

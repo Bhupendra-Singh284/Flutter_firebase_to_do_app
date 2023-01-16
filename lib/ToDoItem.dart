@@ -14,9 +14,10 @@ class ToDoItem {
                 spreadRadius: 0.1)
           ]),
       child: ListTile(
+        horizontalTitleGap: 8,
         dense: true,
         isThreeLine: false,
-        contentPadding: const EdgeInsets.all(5),
+        contentPadding: const EdgeInsets.all(7),
         tileColor: const Color.fromARGB(255, 255, 255, 255),
         shape: RoundedRectangleBorder(
             side: BorderSide(
@@ -25,13 +26,13 @@ class ToDoItem {
             ),
             borderRadius: BorderRadius.circular(20)),
         trailing: SizedBox(
-          width: 74,
+          width: 75,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
                 isSelected: true,
-                iconSize: 25,
+                iconSize: 26,
                 constraints: const BoxConstraints(),
                 padding: const EdgeInsets.only(right: 10),
                 icon: const Icon(Icons.edit_note_rounded),
@@ -40,10 +41,11 @@ class ToDoItem {
                   print("tapped edit button");
                 },
               ),
+              const Padding(padding: EdgeInsets.only(right: 5)),
               IconButton(
                 constraints: const BoxConstraints(),
                 padding: const EdgeInsets.only(right: 8),
-                iconSize: 25,
+                iconSize: 26,
                 icon: const Icon(Icons.delete_rounded),
                 color: const Color.fromARGB(253, 41, 152, 249).withOpacity(0.9),
                 onPressed: () {
@@ -54,11 +56,14 @@ class ToDoItem {
           ),
         ),
         leading: IconButton(
+          iconSize: 24,
           icon: const Icon(Icons.check_box_outline_blank),
           onPressed: () {},
         ),
         subtitle: Text(
-          description,
+          description.length > 50
+              ? "${description.substring(0, 50)}..."
+              : description,
           style: const TextStyle(
             fontFamily: 'Montserrat',
             fontSize: 15,
