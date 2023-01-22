@@ -1,7 +1,46 @@
 import 'package:flutter/material.dart';
 
-class ToDoItem {
-  static Container createTile(String title, String description) {
+class ToDoItem extends ChangeNotifier {
+  static final title = [];
+  static final description = [];
+
+  bool isListEmpty() {
+    return title.isEmpty;
+  }
+
+  int sizeofList() {
+    return title.length;
+  }
+
+  void addNewTask(String inputTitle, String inputDescription) {
+    title.add(inputTitle);
+    description.add(inputDescription);
+    notifyListeners();
+  }
+
+  void deleteTask(String inputTitle, String inputDescription) {
+    title.remove(inputTitle);
+    description.remove(inputDescription);
+    notifyListeners();
+  }
+
+  Padding createList() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 28),
+      child: ListView.separated(
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: 30);
+          },
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: sizeofList(),
+          itemBuilder: (context, index) {
+            return createTile(title[index], description[index]);
+          }),
+    );
+  }
+
+  Container createTile(String title, String description) {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -49,6 +88,7 @@ class ToDoItem {
                 icon: const Icon(Icons.delete_rounded),
                 color: const Color.fromARGB(253, 41, 152, 249).withOpacity(0.9),
                 onPressed: () {
+                  deleteTask(title, description);
                   print("tapped delete button");
                 },
               )

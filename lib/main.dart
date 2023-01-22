@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_to_do_app/App_pages/Homepage.dart';
+import 'package:flutter_to_do_app/ToDoItem.dart';
 import 'package:flutter_to_do_app/reusable_widgets/password_visibility.dart';
 import 'package:flutter_to_do_app/user_login_screens/loginScreen.dart';
 import 'package:flutter_to_do_app/firebase_services/user_authentication.dart';
@@ -27,6 +28,7 @@ void main() async {
 
   //create multiproviders for state management and to access their functions througout the MyApp
   runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => ToDoItem()),
     ChangeNotifierProvider(create: (context) => AuthenticateUsers()),
     ChangeNotifierProvider(create: (context) => PasswordVisibility())
   ], child: const MyApp()));

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_to_do_app/App_pages/Completed_Tasks.dart';
+import 'package:flutter_to_do_app/ToDoItem.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_to_do_app/firebase_services/user_authentication.dart';
 import 'package:flutter_to_do_app/custom_colors.dart';
@@ -25,9 +26,9 @@ class _HomepageState extends State<Homepage> {
   final descriptionController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
 
-  final screens = [ToDoPage(), const CompletedTasks()];
+  final screens = [const ToDoPage(), const CompletedTasks()];
 
-  AlertDialog addNewTask() {
+  AlertDialog addNewTask(final todoItemProvider) {
     titleController.clear();
     descriptionController.clear();
     return AlertDialog(
@@ -62,6 +63,9 @@ class _HomepageState extends State<Homepage> {
                 onPressed: () {
                   if (_formkey.currentState!.validate()) {
                     print("correct input");
+                    todoItemProvider.addNewTask(titleController.text.toString(),
+                        descriptionController.text.toString());
+                    Navigator.pop(context);
                   }
                 },
                 child: const Text(
@@ -180,6 +184,7 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthenticateUsers>(context);
+    final todoItemProvider = Provider.of<ToDoItem>(context);
     email = email.replaceAll('.', ',');
 
     return Scaffold(
@@ -193,7 +198,7 @@ class _HomepageState extends State<Homepage> {
               showDialog(
                   barrierDismissible: false,
                   context: context,
-                  builder: (context) => addNewTask());
+                  builder: (context) => addNewTask(todoItemProvider));
             },
             backgroundColor: CustomColors.themeColor,
             child: const Icon(Icons.add, color: Colors.white, size: 34)),
