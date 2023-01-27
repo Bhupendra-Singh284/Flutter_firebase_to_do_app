@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     //create a provider to access the current state of the user
     final authProvider = Provider.of<AuthenticateUsers>(context);
+    final todoitemProvider = Provider.of<ToDoItem>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
@@ -49,7 +50,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       //keep returning login screen until any user detected in the firebase
-      home: authProvider.isUseravailable() ? Homepage() : const LoginScreen(),
+      home: authProvider.isUseravailable()
+          ? Homepage(
+              providerTodoItem: todoitemProvider,
+            )
+          : const LoginScreen(),
     );
   }
 }

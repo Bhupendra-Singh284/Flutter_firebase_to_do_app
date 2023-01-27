@@ -9,8 +9,9 @@ import 'package:flutter_to_do_app/custom_colors.dart';
 import 'package:flutter_to_do_app/App_pages/To_Do_page.dart';
 
 class Homepage extends StatefulWidget {
-  Homepage({super.key});
-  final DatabaseReference ref = FirebaseDatabase.instance.ref();
+  Homepage({super.key, required this.providerTodoItem});
+
+  final ToDoItem providerTodoItem;
   final textController = TextEditingController();
 
   @override
@@ -18,9 +19,26 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  String email =
-      FirebaseAuth.instance.currentUser?.providerData[0].email.toString() ?? "";
+  final DatabaseReference ref = FirebaseDatabase.instance.ref();
+
+  String email = FirebaseAuth.instance.currentUser?.providerData[0].email
+          .toString()
+          .replaceAll('.', ',') ??
+      "";
+
   int selectedIndex = 0;
+
+  @override
+  void initState() {
+    read();
+    super.initState();
+  }
+
+  void read() async {
+    widget.providerTodoItem.setData();
+    widget.providerTodoItem.readTodoTaskData();
+    widget.providerTodoItem.readCompletedTaskData();
+  }
 
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -62,9 +80,12 @@ class _HomepageState extends State<Homepage> {
                     const ButtonStyle(elevation: MaterialStatePropertyAll(2)),
                 onPressed: () {
                   if (_formkey.currentState!.validate()) {
+                    if (descriptionController.text.isEmpty) {
+                      descriptionController.text = " ";
+                    }
                     print("correct input");
                     todoItemProvider.addNewTask(titleController.text.toString(),
-                        descriptionController.text.toString());
+                        descriptionController.text.toString(), false);
                     Navigator.pop(context);
                   }
                 },
@@ -126,10 +147,7 @@ class _HomepageState extends State<Homepage> {
               TextFormField(
                 controller: descriptionController,
                 validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Enter description";
-                  }
-                  if (value.length > 150) {
+                  if (value!.length > 150) {
                     return "Description should be between 0 to 150 letters";
                   }
                   return null;
@@ -207,6 +225,7 @@ class _HomepageState extends State<Homepage> {
             actions: [
               TextButton(
                   onPressed: () {
+                    todoItemProvider.signOutUser();
                     authProvider.signoutUser();
                   },
                   child: const Text(

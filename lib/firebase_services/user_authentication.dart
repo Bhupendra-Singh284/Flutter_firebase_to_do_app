@@ -142,7 +142,7 @@ class AuthenticateUsers with ChangeNotifier {
   //for signing out a user from the app
   void signoutUser() async {
     _auth.signOut();
-    googleUser.disconnect();
+    googleUser.signOut();
     user = null;
     notifyListeners();
   }

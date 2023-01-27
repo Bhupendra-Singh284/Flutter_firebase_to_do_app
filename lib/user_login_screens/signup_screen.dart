@@ -41,6 +41,7 @@ class _SignupScreenState extends State<SignupScreen> {
     //return homepage in a scaffold widget
     return Scaffold(
         appBar: AppBar(
+          elevation: 1.6,
           centerTitle: true,
           title: const Text(
             "Sign Up",

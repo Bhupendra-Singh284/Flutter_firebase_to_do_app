@@ -1,30 +1,146 @@
+import 'dart:async';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_to_do_app/reusable_widgets/checkbox.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ToDoItem extends ChangeNotifier {
-  static final title = [];
-  static final description = [];
+  var refTodoTask;
+  var refCompletedTask;
+  bool _tododataChecked = false;
+  bool _completedtaskDataChecked = false;
+
+  bool tododataChecked() {
+    return _tododataChecked;
+  }
+
+  bool completedTaskdataChecked() {
+    return _completedtaskDataChecked;
+  }
+
+  var todoTaskskeys = [];
+  var completedTaskKeys = [];
+
+  void signOutUser() {
+    todoTasks.clear();
+    completedTasks.clear();
+    todoTaskskeys.clear();
+    completedTaskKeys.clear();
+    _tododataChecked = false;
+    _completedtaskDataChecked = false;
+  }
+
+  void setData() {
+    refTodoTask = FirebaseDatabase.instance.ref().child(
+        "${FirebaseAuth.instance.currentUser!.providerData[0].email.toString().replaceAll('.', ',')}/TodoTask+");
+    refCompletedTask = FirebaseDatabase.instance.ref().child(
+        "${FirebaseAuth.instance.currentUser!.providerData[0].email.toString().replaceAll('.', ',')}/CompletedTask+");
+  }
+
+  void readTodoTaskData() async {
+    final pref = await refTodoTask.get();
+
+    final task = pref.children.toList();
+
+    if (task.isEmpty) {
+      _tododataChecked = true;
+      notifyListeners();
+      return;
+    }
+
+    for (int i = 0; i < task.length; i++) {
+      todoTaskskeys.add(task[i].key.toString());
+      final map = task[i].value as Map;
+      todoTasks[map["title"]] = map["description"];
+    }
+
+    _tododataChecked = true;
+    notifyListeners();
+  }
+
+  void readCompletedTaskData() async {
+    final pref = await refCompletedTask.get();
+
+    final task = pref.children.toList();
+
+    if (task.isEmpty) {
+      _completedtaskDataChecked = true;
+      notifyListeners();
+      return;
+    }
+
+    for (int i = 0; i < task.length; i++) {
+      completedTaskKeys.add(task[i].key.toString());
+      final map = task[i].value as Map;
+      completedTasks[map["title"]] = map["description"];
+    }
+
+    _completedtaskDataChecked = true;
+    notifyListeners();
+  }
+
+  final todoTasks = {};
+  final completedTasks = {};
 
   bool isListEmpty() {
-    return title.isEmpty;
+    print("checking list");
+
+    return todoTasks.isEmpty;
+  }
+
+  bool isCompletedTaskListEmpty() {
+    return completedTasks.isEmpty;
   }
 
   int sizeofList() {
-    return title.length;
+    return todoTasks.length;
   }
 
-  void addNewTask(String inputTitle, String inputDescription) {
-    title.add(inputTitle);
-    description.add(inputDescription);
+  void addNewTask(String inputTitle, String inputDescription,
+      bool addinCompletedList) async {
+    if (addinCompletedList) {
+      completedTasks[inputTitle] = inputDescription;
+      final key = refCompletedTask.push().key;
+      refCompletedTask
+          .child(key.toString())
+          .set({"title": inputTitle, "description": inputDescription});
+      completedTaskKeys.add(key.toString());
+    } else {
+      todoTasks[inputTitle] = inputDescription;
+      final key = refTodoTask.push().key;
+      refTodoTask
+          .child(key.toString())
+          .set({"title": inputTitle, "description": inputDescription});
+      todoTaskskeys.add(key.toString());
+      print(key.toString());
+    }
     notifyListeners();
   }
 
-  void deleteTask(String inputTitle, String inputDescription) {
-    title.remove(inputTitle);
-    description.remove(inputDescription);
-    notifyListeners();
+  void deleteCompletedTask(int index) {
+    Timer(const Duration(milliseconds: 130), (() {
+      refCompletedTask.child(completedTaskKeys[index].toString()).remove();
+      completedTaskKeys.removeAt(index);
+      completedTasks.remove(completedTasks.keys.elementAt(index));
+      notifyListeners();
+    }));
   }
 
-  Padding createList() {
+  void deleteTask(bool addToCompletedList, int index) {
+    if (addToCompletedList) {
+      addNewTask(todoTasks.keys.elementAt(index),
+          todoTasks.values.elementAt(index), true);
+    }
+    Timer(Duration(milliseconds: addToCompletedList ? 0 : 150), (() {
+      refTodoTask.child(todoTaskskeys[index].toString()).remove();
+      todoTaskskeys.removeAt(index);
+      todoTasks.remove(todoTasks.keys.elementAt(index));
+
+      notifyListeners();
+    }));
+  }
+
+  Padding createList(bool showCompletedList, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 28),
       child: ListView.separated(
@@ -33,14 +149,17 @@ class ToDoItem extends ChangeNotifier {
           },
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: sizeofList(),
+          itemCount:
+              showCompletedList ? completedTasks.length : todoTasks.length,
           itemBuilder: (context, index) {
-            return createTile(title[index], description[index]);
+            return showCompletedList
+                ? createTile(completedTasks, true, index)
+                : createTile(todoTasks, false, index);
           }),
     );
   }
 
-  Container createTile(String title, String description) {
+  Container createTile(Map task, bool completedListTile, int index) {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -53,11 +172,11 @@ class ToDoItem extends ChangeNotifier {
                 spreadRadius: 0.1)
           ]),
       child: ListTile(
+        onTap: () {},
         horizontalTitleGap: 8,
         dense: true,
         isThreeLine: false,
         contentPadding: const EdgeInsets.all(7),
-        tileColor: const Color.fromARGB(255, 255, 255, 255),
         shape: RoundedRectangleBorder(
             side: BorderSide(
               width: 0,
@@ -65,45 +184,61 @@ class ToDoItem extends ChangeNotifier {
             ),
             borderRadius: BorderRadius.circular(20)),
         trailing: SizedBox(
-          width: 75,
+          width: 76,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              IconButton(
-                isSelected: true,
-                iconSize: 26,
-                constraints: const BoxConstraints(),
-                padding: const EdgeInsets.only(right: 10),
-                icon: const Icon(Icons.edit_note_rounded),
-                color: Colors.blue.withOpacity(0.9),
-                onPressed: () {
-                  print("tapped edit button");
-                },
-              ),
+              completedListTile
+                  ? const Text("")
+                  : Material(
+                      color: Colors.transparent,
+                      child: IconButton(
+                        isSelected: true,
+                        splashColor: const Color.fromARGB(255, 126, 172, 250),
+                        splashRadius: 20,
+                        iconSize: 26,
+                        constraints: const BoxConstraints(),
+                        padding: const EdgeInsets.only(right: 10),
+                        icon: const Icon(Icons.edit_note_rounded),
+                        color: Colors.blue.withOpacity(0.9),
+                        onPressed: () {
+                          print("tapped edit button");
+                        },
+                      ),
+                    ),
               const Padding(padding: EdgeInsets.only(right: 5)),
-              IconButton(
-                constraints: const BoxConstraints(),
-                padding: const EdgeInsets.only(right: 8),
-                iconSize: 26,
-                icon: const Icon(Icons.delete_rounded),
-                color: const Color.fromARGB(253, 41, 152, 249).withOpacity(0.9),
-                onPressed: () {
-                  deleteTask(title, description);
-                  print("tapped delete button");
-                },
+              Material(
+                color: Colors.transparent,
+                child: IconButton(
+                  splashColor: const Color.fromARGB(255, 126, 172, 250),
+                  splashRadius: 20,
+                  constraints: const BoxConstraints(),
+                  padding: const EdgeInsets.only(right: 8),
+                  iconSize: 26,
+                  icon: const Icon(Icons.delete_rounded),
+                  color:
+                      const Color.fromARGB(253, 41, 152, 249).withOpacity(0.9),
+                  onPressed: () {
+                    completedListTile
+                        ? deleteCompletedTask(index)
+                        : deleteTask(false, index);
+                    print("tapped delete button");
+                  },
+                ),
               )
             ],
           ),
         ),
-        leading: IconButton(
-          iconSize: 24,
-          icon: const Icon(Icons.check_box_outline_blank),
-          onPressed: () {},
-        ),
+        leading: completedListTile
+            ? IconButton(
+                onPressed: () {},
+                iconSize: 29,
+                icon: const Icon(Icons.check_box_outlined))
+            : Mycheckbox(
+                index: index,
+              ),
         subtitle: Text(
-          description.length > 50
-              ? "${description.substring(0, 50)}..."
-              : description,
+          task[task.keys.elementAt(index)].toString(),
           style: const TextStyle(
             fontFamily: 'Montserrat',
             fontSize: 15,
@@ -112,7 +247,7 @@ class ToDoItem extends ChangeNotifier {
           ),
         ),
         title: Text(
-          title,
+          task.keys.elementAt(index).toString(),
           style: const TextStyle(
               fontSize: 18,
               color: Color.fromARGB(255, 60, 59, 59),

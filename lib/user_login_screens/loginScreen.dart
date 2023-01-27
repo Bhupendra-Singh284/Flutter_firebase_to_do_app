@@ -40,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
         appBar: AppBar(
+          elevation: 1.6,
           centerTitle: true,
           title: const Text("To Do App", style: TextStyle(fontSize: 30)),
         ),
