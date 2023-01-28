@@ -36,7 +36,7 @@ class _MycheckboxState extends State<Mycheckbox> {
               },
               icon: const Icon(Icons.check_box_outlined))
           : IconButton(
-              iconSize: 28,
+              iconSize: 30,
               onPressed: () {
                 setState(() {
                   pressed = !pressed;

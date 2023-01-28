@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_to_do_app/AppPagesWidgets.dart';
 import 'package:flutter_to_do_app/App_pages/Completed_Tasks.dart';
 import 'package:flutter_to_do_app/ToDoItem.dart';
 import 'package:provider/provider.dart';
@@ -45,128 +46,6 @@ class _HomepageState extends State<Homepage> {
   final _formkey = GlobalKey<FormState>();
 
   final screens = [const ToDoPage(), const CompletedTasks()];
-
-  AlertDialog addNewTask(final todoItemProvider) {
-    titleController.clear();
-    descriptionController.clear();
-    return AlertDialog(
-      title: const Text(
-        "Add new task",
-        style: TextStyle(
-            fontFamily: 'Lato', fontWeight: FontWeight.w500, fontSize: 28),
-      ),
-      contentPadding: const EdgeInsets.all(20),
-      actions: [
-        Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          SizedBox(
-            height: 40,
-            child: ElevatedButton(
-                style:
-                    const ButtonStyle(elevation: MaterialStatePropertyAll(2)),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  "Cancel",
-                  style: TextStyle(
-                      fontSize: 18, color: Colors.white, fontFamily: 'Lato'),
-                )),
-          ),
-          const Padding(padding: EdgeInsets.only(right: 15)),
-          SizedBox(
-            height: 40,
-            child: ElevatedButton(
-                style:
-                    const ButtonStyle(elevation: MaterialStatePropertyAll(2)),
-                onPressed: () {
-                  if (_formkey.currentState!.validate()) {
-                    if (descriptionController.text.isEmpty) {
-                      descriptionController.text = " ";
-                    }
-                    print("correct input");
-                    todoItemProvider.addNewTask(titleController.text.toString(),
-                        descriptionController.text.toString(), false);
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text(
-                  "Add",
-                  style: TextStyle(
-                      fontSize: 18, color: Colors.white, fontFamily: 'Lato'),
-                )),
-          ),
-          const Padding(padding: EdgeInsets.only(right: 10)),
-        ])
-      ],
-      content: SizedBox(
-        width: 150,
-        child: Form(
-          key: _formkey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(padding: EdgeInsets.only(bottom: 10)),
-              const Text(
-                "Title",
-                style: TextStyle(
-                    fontSize: 19,
-                    fontFamily: 'Lato',
-                    fontWeight: FontWeight.w200),
-              ),
-              const Padding(padding: EdgeInsets.only(bottom: 20)),
-              TextFormField(
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Enter a title";
-                  }
-                  if (value.length > 60) {
-                    return "Title should be between 0 to 60 letters";
-                  }
-                  return null;
-                },
-                controller: titleController,
-                minLines: 1,
-                maxLines: 1,
-                style: const TextStyle(fontSize: 18, height: 1.5),
-                decoration: const InputDecoration(
-                    errorStyle: TextStyle(fontSize: 14),
-                    isDense: true,
-                    counterText: "",
-                    contentPadding: EdgeInsets.only(bottom: 10)),
-              ),
-              const Padding(padding: EdgeInsets.only(bottom: 16)),
-              const Text(
-                "Description",
-                style: TextStyle(
-                    fontSize: 19,
-                    fontFamily: 'Lato',
-                    fontWeight: FontWeight.w500),
-              ),
-              const Padding(padding: EdgeInsets.only(bottom: 20)),
-              TextFormField(
-                controller: descriptionController,
-                validator: (value) {
-                  if (value!.length > 150) {
-                    return "Description should be between 0 to 150 letters";
-                  }
-                  return null;
-                },
-                minLines: 1,
-                maxLines: 3,
-                style: const TextStyle(fontSize: 18, height: 1.5),
-                decoration: const InputDecoration(
-                    errorStyle: TextStyle(fontSize: 14),
-                    counterText: "",
-                    isDense: true,
-                    contentPadding: EdgeInsets.only(bottom: 10)),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   Container createBottomNavigationBar() {
     return Container(
@@ -216,7 +95,14 @@ class _HomepageState extends State<Homepage> {
               showDialog(
                   barrierDismissible: false,
                   context: context,
-                  builder: (context) => addNewTask(todoItemProvider));
+                  builder: (context) => AppPageWidgets.addOrEditTask(
+                      -1,
+                      todoItemProvider,
+                      false,
+                      titleController,
+                      descriptionController,
+                      _formkey,
+                      context));
             },
             backgroundColor: CustomColors.themeColor,
             child: const Icon(Icons.add, color: Colors.white, size: 34)),

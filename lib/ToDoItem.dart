@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_to_do_app/AppPagesWidgets.dart';
 import 'package:flutter_to_do_app/reusable_widgets/checkbox.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 class ToDoItem extends ChangeNotifier {
   var refTodoTask;
@@ -79,7 +81,7 @@ class ToDoItem extends ChangeNotifier {
     notifyListeners();
   }
 
-  final todoTasks = {};
+  var todoTasks = {};
   final completedTasks = {};
 
   bool isListEmpty() {
@@ -140,6 +142,55 @@ class ToDoItem extends ChangeNotifier {
     }));
   }
 
+  AlertDialog editTask(int index, BuildContext context) {
+    final todoItemProvider = Provider.of<ToDoItem>(context);
+    var formkey = GlobalKey<FormState>();
+    var titleController = TextEditingController();
+    titleController.text = todoTasks.keys.elementAt(index);
+    var descriptionController = TextEditingController();
+    descriptionController.text = todoTasks[todoTasks.keys.elementAt(index)];
+    return AppPageWidgets.addOrEditTask(index, todoItemProvider, true,
+        titleController, descriptionController, formkey, context);
+  }
+
+  void editTaskBackend(int index, String title, String description) async {
+    var secondmap = {};
+    for (int i = 0; i < todoTasks.length; i++) {
+      if (i == index) {
+        secondmap[title] = description;
+        continue;
+      }
+      secondmap[todoTasks.keys.elementAt(i)] =
+          todoTasks[todoTasks.keys.elementAt(i)];
+    }
+    todoTasks = secondmap;
+
+    await refTodoTask
+        .child(todoTaskskeys[index].toString())
+        .set({"title": title, "description": description});
+
+    notifyListeners();
+  }
+
+  AlertDialog showTask(int index, bool completedTask) {
+    return AlertDialog(
+        contentTextStyle: const TextStyle(
+            color: Color.fromARGB(255, 68, 67, 67),
+            fontFamily: "Lato",
+            fontSize: 20),
+        titleTextStyle: const TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+            fontFamily: "Lato_bold",
+            fontSize: 25),
+        title: Text(completedTask
+            ? completedTasks.keys.elementAt(index)
+            : todoTasks.keys.elementAt(index)),
+        content: Text(completedTask
+            ? completedTasks[completedTasks.keys.elementAt(index)].toString()
+            : todoTasks[todoTasks.keys.elementAt(index)].toString()));
+  }
+
   Padding createList(bool showCompletedList, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 28),
@@ -153,13 +204,14 @@ class ToDoItem extends ChangeNotifier {
               showCompletedList ? completedTasks.length : todoTasks.length,
           itemBuilder: (context, index) {
             return showCompletedList
-                ? createTile(completedTasks, true, index)
-                : createTile(todoTasks, false, index);
+                ? createTile(completedTasks, true, index, context)
+                : createTile(todoTasks, false, index, context);
           }),
     );
   }
 
-  Container createTile(Map task, bool completedListTile, int index) {
+  Container createTile(
+      Map task, bool completedListTile, int index, BuildContext context) {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -172,10 +224,17 @@ class ToDoItem extends ChangeNotifier {
                 spreadRadius: 0.1)
           ]),
       child: ListTile(
-        onTap: () {},
+        onTap: () {
+          showDialog(
+              context: context,
+              builder: ((context) {
+                return showTask(index, completedListTile);
+              }));
+        },
         horizontalTitleGap: 8,
-        dense: true,
-        isThreeLine: false,
+        dense: false,
+        isThreeLine: true,
+        visualDensity: const VisualDensity(vertical: -1),
         contentPadding: const EdgeInsets.all(7),
         shape: RoundedRectangleBorder(
             side: BorderSide(
@@ -202,7 +261,11 @@ class ToDoItem extends ChangeNotifier {
                         icon: const Icon(Icons.edit_note_rounded),
                         color: Colors.blue.withOpacity(0.9),
                         onPressed: () {
-                          print("tapped edit button");
+                          showDialog(
+                              context: context,
+                              builder: ((context) {
+                                return editTask(index, context);
+                              }));
                         },
                       ),
                     ),
@@ -233,12 +296,15 @@ class ToDoItem extends ChangeNotifier {
             ? IconButton(
                 onPressed: () {},
                 iconSize: 29,
+                splashRadius: 10,
                 icon: const Icon(Icons.check_box_outlined))
             : Mycheckbox(
                 index: index,
               ),
         subtitle: Text(
-          task[task.keys.elementAt(index)].toString(),
+          task[task.keys.elementAt(index)].toString().length > 40
+              ? "${task[task.keys.elementAt(index)].toString().substring(0, 40)}...."
+              : task[task.keys.elementAt(index).toString()],
           style: const TextStyle(
             fontFamily: 'Montserrat',
             fontSize: 15,
@@ -247,7 +313,9 @@ class ToDoItem extends ChangeNotifier {
           ),
         ),
         title: Text(
-          task.keys.elementAt(index).toString(),
+          task.keys.elementAt(index).toString().length > 40
+              ? "${task.keys.elementAt(index).toString().substring(0, 40)}...."
+              : task.keys.elementAt(index).toString(),
           style: const TextStyle(
               fontSize: 18,
               color: Color.fromARGB(255, 60, 59, 59),
