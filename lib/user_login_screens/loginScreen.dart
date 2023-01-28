@@ -73,17 +73,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   //create password field for user input
                   Formelements.createPasswordfield(
                       emailController, passwordController, context),
-                  Container(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                          onPressed: () {},
-                          style: const ButtonStyle(
-                            overlayColor: MaterialStatePropertyAll(
-                                Color.fromARGB(255, 21, 109, 181)),
-                          ),
-                          child: Formelements.createCustomText(
-                              "Forgot password?", 16, Colors.white, true))),
-                  const Padding(padding: EdgeInsets.only(bottom: 12)),
+
+                  const Padding(padding: EdgeInsets.only(bottom: 30)),
                   SizedBox(
                     height: 50,
                     width: 335,
