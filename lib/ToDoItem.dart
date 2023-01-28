@@ -9,8 +9,15 @@ import 'package:provider/provider.dart';
 class ToDoItem extends ChangeNotifier {
   var refTodoTask;
   var refCompletedTask;
+
   bool _tododataChecked = false;
   bool _completedtaskDataChecked = false;
+
+  var todoTaskskeys = [];
+  var completedTaskKeys = [];
+
+  var todoTasks = {};
+  final completedTasks = {};
 
   bool tododataChecked() {
     return _tododataChecked;
@@ -19,9 +26,6 @@ class ToDoItem extends ChangeNotifier {
   bool completedTaskdataChecked() {
     return _completedtaskDataChecked;
   }
-
-  var todoTaskskeys = [];
-  var completedTaskKeys = [];
 
   void signOutUser() {
     todoTasks.clear();
@@ -81,21 +85,12 @@ class ToDoItem extends ChangeNotifier {
     notifyListeners();
   }
 
-  var todoTasks = {};
-  final completedTasks = {};
-
   bool isListEmpty() {
-    print("checking list");
-
     return todoTasks.isEmpty;
   }
 
   bool isCompletedTaskListEmpty() {
     return completedTasks.isEmpty;
-  }
-
-  int sizeofList() {
-    return todoTasks.length;
   }
 
   void addNewTask(String inputTitle, String inputDescription,
@@ -114,7 +109,6 @@ class ToDoItem extends ChangeNotifier {
           .child(key.toString())
           .set({"title": inputTitle, "description": inputDescription});
       todoTaskskeys.add(key.toString());
-      print(key.toString());
     }
     notifyListeners();
   }
@@ -285,7 +279,6 @@ class ToDoItem extends ChangeNotifier {
                     completedListTile
                         ? deleteCompletedTask(index)
                         : deleteTask(false, index);
-                    print("tapped delete button");
                   },
                 ),
               )

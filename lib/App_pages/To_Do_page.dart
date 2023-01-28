@@ -9,8 +9,6 @@ class ToDoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final todoItemProvider = Provider.of<ToDoItem>(context);
 
-    print("build method");
-
     return ListView(children: [
       const Padding(padding: EdgeInsets.only(bottom: 25)),
       Consumer<ToDoItem>(

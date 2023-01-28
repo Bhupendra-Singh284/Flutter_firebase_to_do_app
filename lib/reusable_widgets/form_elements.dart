@@ -123,7 +123,6 @@ class Formelements {
               )
             : IconButton(
                 onPressed: () {
-                  print("Tapped");
                   passwordVisibility
                       .toggleVisibility(); //call the toggle function on tap
                 },

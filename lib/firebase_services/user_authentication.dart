@@ -26,15 +26,12 @@ class AuthenticateUsers with ChangeNotifier {
     try {
       _auth.signOut();
       googleUser.signOut();
-      final userCredential =
-          EmailAuthProvider.credential(email: email, password: password);
 
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
 
       user = credential.user;
       if (user != null) {
-        print("user created");
         notifyListeners();
         return user;
       } else {
@@ -50,7 +47,6 @@ class AuthenticateUsers with ChangeNotifier {
     } catch (e) {
       user = null;
       notifyListeners();
-      print(e);
     }
   }
 
@@ -78,7 +74,6 @@ class AuthenticateUsers with ChangeNotifier {
     } catch (e) {
       user = null;
       notifyListeners();
-      print(e);
     }
   }
 
@@ -92,7 +87,6 @@ class AuthenticateUsers with ChangeNotifier {
       final GoogleSignInAccount? googleAccUser = await googleUser.signIn();
 
       if (googleAccUser == null) {
-        print("nothing selected");
         return;
       }
       // Obtain the auth details from the request
