@@ -39,6 +39,9 @@ class ToDoItem extends ChangeNotifier {
   void setData() {
     refTodoTask = FirebaseDatabase.instance.ref().child(
         "${FirebaseAuth.instance.currentUser!.providerData[0].email.toString().replaceAll('.', ',')}/TodoTask+");
+    print(FirebaseAuth.instance.currentUser!.providerData[0].email
+        .toString()
+        .replaceAll('.', ','));
     refCompletedTask = FirebaseDatabase.instance.ref().child(
         "${FirebaseAuth.instance.currentUser!.providerData[0].email.toString().replaceAll('.', ',')}/CompletedTask+");
   }
