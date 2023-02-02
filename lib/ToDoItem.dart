@@ -298,8 +298,8 @@ class ToDoItem extends ChangeNotifier {
                 index: index,
               ),
         subtitle: Text(
-          task[task.keys.elementAt(index)].toString().length > 40
-              ? "${task[task.keys.elementAt(index)].toString().substring(0, 40)}...."
+          task[task.keys.elementAt(index)].toString().length > 45
+              ? "${task[task.keys.elementAt(index)].toString().substring(0, 45)}...."
               : task[task.keys.elementAt(index).toString()],
           style: const TextStyle(
             fontFamily: 'Montserrat',
@@ -309,8 +309,8 @@ class ToDoItem extends ChangeNotifier {
           ),
         ),
         title: Text(
-          task.keys.elementAt(index).toString().length > 40
-              ? "${task.keys.elementAt(index).toString().substring(0, 40)}...."
+          task.keys.elementAt(index).toString().length > 45
+              ? "${task.keys.elementAt(index).toString().substring(0, 45)}...."
               : task.keys.elementAt(index).toString(),
           style: const TextStyle(
               fontSize: 18,
